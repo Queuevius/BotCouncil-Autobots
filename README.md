@@ -1,8 +1,8 @@
 # BotCouncil Autobots
 
-Autobots are AI workers that take a written job card, do the work on their own in a fenced-off box, and get graded by a test they never see. One kind writes and fixes code. The other kind works in a hidden web browser: filling in forms, applying for things, stopping when it shouldn't guess. They run at night on an ordinary home computer while their owner sleeps, and every change waits for a person's OK before it touches anything real.
+Autobots are AI workers that take a written job card, do the work on their own in a fenced-off box, and get graded by a test they never see. One kind writes and fixes code. The other kind works in a hidden web browser: filling in forms, applying for things, stopping when it shouldn't guess. They run at night on an ordinary home computer (using API keys), while their owner sleeps, and every change waits for a person's OK before it touches anything real.
 
-Made by Tony Brasher, founder of Needpedia (https://needpedia.org), who does not write code. Everything here was built by directing AI, using the thread system and BotCouncil:
+Made by Anthony Brasher, founder of Needpedia (https://needpedia.org), who himself does not write code. Everything running on his computer, (Needpedia was co developed by a professional dev named Murtaza Zarkhwan), was built by directing AI, using the thread system and BotCouncil:
 
 - The thread system (how the work is organized): https://github.com/Queuevius/Needpedia/wiki/The-Thread-System
 - BotCouncil 2.0 (the window the threads live in): https://github.com/Queuevius/BotCouncil-2.0
@@ -46,7 +46,7 @@ Nothing outside the job's folder is ever changed. A real change only goes live a
 
 ## 2. Why it exists
 
-Tony runs a dozen projects through AI threads. Most of the time goes into small, clear jobs: a missing rule here, a button there, a tool that saves digging through a 5,000-line file. If those can run on their own overnight, a person who doesn't code can get far more done in a day.
+Anthony runs a dozen projects through AI threads. Most of the time goes into small, clear jobs: a missing rule here, a button there, a tool that saves digging through a 5,000-line file. If those can run on their own overnight, a person who doesn't code can get far more done in a day.
 
 In his words: "If I can automate what I'm doing I'll be able to accomplish WAY more per day."
 
@@ -101,7 +101,7 @@ The hidden check runs after every stage (it's free and offline), so the data sho
 
 ## 5. What was measured
 
-The 7 kinds of work, each a real job from Tony's projects or modeled on one:
+The 7 kinds of work, each a real job from Anthony's projects or modeled on one:
 
 - **a small clear fix:** add one missing web server rule
 - **changing existing code by house rules:** hide a cost line in visitor spaces of the BotCouncil window, as one block in the right place, touching nothing else
@@ -155,7 +155,7 @@ So for driving a browser, what decided success wasn't how strong a model was: it
 
 `--models auto` reads the card's kind of work and the measured results, then tries the cheapest proven way first: the lowest money per passed job among the ways that passed at least 3 times in 4. If that fails, it moves to the next one, always ending with the strong model with the full tools. A kind with no results yet starts with V4.1 Flash with the tools, then Flash with the tools, then Pro with the tools.
 
-Tony's rule for it: "It can't end up costing more than just using the stronger AI in the first place." On these results, every proven cheap way costs less per pass than Pro does.
+Anthony's rule for it: "It can't end up costing more than just using the stronger AI in the first place." On these results, every proven cheap way costs less per pass than Pro does.
 
 ## 9. Running your own
 
@@ -168,7 +168,7 @@ You need a Linux computer with Docker, Python 3.12, and an AI key on DeepInfra (
 5. Try the tiny job: `venv/bin/python autobot.py run smoke-hello --models flash41`
 6. Write your own cards in `tasks/NAME/card.txt` (copy one of the examples).
 
-The cards in `code/tasks/` point at Tony's own files (his web server settings, his server program); they're examples of the format, and won't run on your computer without your own files in their place. The browser practice cards run anywhere: they bring their own practice site.
+The cards in `code/tasks/` point at Anthony's own files (his web server settings, his server program); they're examples of the format, and won't run on your computer without your own files in their place. The browser practice cards run anywhere: they bring their own practice site.
 
 Easiest route if you don't code: give this page and the `code/` folder to an AI that can run commands, and ask it to set this up with you step by step. That's how all of it was built.
 
@@ -190,12 +190,12 @@ Easiest route if you don't code: give this page and the `code/` folder to an AI 
 
 ## 11. Credits
 
-- Tony Brasher (https://github.com/Queuevius): design, direction and testing.
+- Anthony Brasher (https://github.com/Queuevius): design, direction and testing.
 - Built with Claude (Anthropic) and DeepSeek. The coding worker is mini-swe-agent (https://github.com/SWE-agent/mini-swe-agent); the browser worker is browser-use (https://github.com/browser-use/browser-use).
 
 ## 12. Quotes about this
 
-Said by Tony while building it, word for word, so readers can see what was said before an AI reworked it.
+Said by Anthony while building it, word for word, so readers can see what was said before an AI reworked it.
 
 - "If I could setup my BC with autopilot mode, it could develop things for me and I could just check in from time to time to see if it completed its task effectively."
 - "If I can automate what I'm doing I'll be able to accomplish WAY more per day."
