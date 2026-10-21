@@ -1,0 +1,54 @@
+== TITLE ==
+One change across two files: a word count button (page plus back end)
+
+== KIND ==
+one change across two files
+
+== FILES ==
+~/BC_private/autobot/tasks/two-file/files/backend.py -> backend.py
+~/BC_private/autobot/tasks/two-file/files/page.html -> page.html
+
+== TASK ==
+page.html is a small page with a text box and an Echo button. backend.py is its back end: every address under /api/ is one function listed in ROUTES, which takes the JSON the page sent (a dict) and returns a dict.
+
+Add a word count feature, the same way Echo works:
+1. In backend.py, a function for the address /api/wordcount, added to ROUTES. It takes {"text": "..."} and returns {"words": N}, where N is how many words are in the text (words are separated by any amount of spaces, tabs or new lines; an empty or missing text has 0 words).
+2. In page.html, a button with id wordcount-btn (its label: Count words) and a place for the answer with id wordcount-out. Clicking the button sends the text box's text to /api/wordcount and shows the number in wordcount-out.
+
+Only add lines: don't change or remove any line that's already in either file. Echo must keep working.
+
+== DONE WHEN ==
+ROUTES has /api/wordcount returning {"words": N} with the right count (0 for empty text); page.html has the wordcount-btn button and the wordcount-out spot, and the button calls /api/wordcount; Echo still works; no existing line in either file was changed or removed.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import difflib, importlib.util, re, sys
+def insert_only(name):
+    b = open('/before/' + name).read().splitlines(True)
+    a = open('/work/' + name).read().splitlines(True)
+    ops = [o for o in difflib.SequenceMatcher(None, b, a, autojunk=False).get_opcodes() if o[0] != 'equal']
+    assert ops, name + ' was not changed'
+    assert all(o[0] == 'insert' for o in ops), 'existing lines in ' + name + ' were changed or removed'
+insert_only('backend.py')
+insert_only('page.html')
+spec = importlib.util.spec_from_file_location('backend', '/work/backend.py')
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+assert '/api/wordcount' in m.ROUTES, 'no /api/wordcount in ROUTES'
+wc = m.ROUTES['/api/wordcount']
+for text, n in [('hello world', 2), ('  one\ttwo\nthree   four  ', 4), ('', 0), ('single', 1)]:
+    got = wc({'text': text})
+    assert got == {'words': n}, f'word count of {text!r} gave {got}, not {{"words": {n}}}'
+assert wc({}) == {'words': 0}, 'missing text should give 0 words'
+assert m.ROUTES['/api/echo']({'text': 'hi'}) == {'text': 'hi'}, 'Echo broke'
+p = open('/work/page.html').read()
+assert re.search(r'<button[^>]*id=["\']wordcount-btn["\']', p), 'no button with id wordcount-btn'
+assert re.search(r'id=["\']wordcount-out["\']', p), 'no spot with id wordcount-out'
+assert '/api/wordcount' in p, 'the page never calls /api/wordcount'
+assert 'Count words' in p, 'the button label is not Count words'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 25
+dollars: 0.25
+minutes: 15

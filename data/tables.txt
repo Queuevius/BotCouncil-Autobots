@@ -1,0 +1,98 @@
+AUTOBOT RESULTS  (131 real jobs)
+pro = DeepSeek V4 Pro (strong, pricier); flash = V4 Flash; flash41 = V4.1 Flash (both cheap). All on DeepInfra.
+'tools' = internet, toolbox, Pro's plan, self-test, Pro's review, one retry. 'bare' = none of those.
+Cost per pass = all money spent on those jobs divided by the jobs that passed.
+
+=== 1. BY MODEL, WITH AND WITHOUT THE TOOLS (BC8 batch only, same 7 jobs x 2 tries) ===
+bare   pro                                      14/14   100%   $0.0517/job       $0.0517/pass   5.2 min/job
+bare   flash                                    11/14    79%   $0.0084/job       $0.0107/pass   4.0 min/job
+bare   flash41                                  14/14   100%   $0.0036/job       $0.0036/pass   1.3 min/job
+tools  pro                                      13/14    93%   $0.1133/job       $0.1221/pass   6.5 min/job
+tools  flash                                    14/14   100%   $0.0195/job       $0.0195/pass   8.7 min/job
+tools  flash41                                  14/14   100%   $0.0124/job       $0.0124/pass   3.1 min/job
+
+=== 2. BY KIND OF WORK AND MODEL (BC8 batch: bare vs tools passes) ===
+change existing code by house rules:
+    pro bare 2/2   pro tools 2/2   flash bare 1/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+fix a bug from an error message:
+    pro bare 2/2   pro tools 2/2   flash bare 2/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+new tool from a description:
+    pro bare 2/2   pro tools 2/2   flash bare 1/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+new tool needing exactness:
+    pro bare 2/2   pro tools 1/2   flash bare 1/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+one change across two files:
+    pro bare 2/2   pro tools 2/2   flash bare 2/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+read code and report without changing anything:
+    pro bare 2/2   pro tools 2/2   flash bare 2/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+small clear fix:
+    pro bare 2/2   pro tools 2/2   flash bare 2/2   flash tools 2/2   flash41 bare 2/2   flash41 tools 2/2
+
+=== 3. WHAT EACH TOOLS STAGE ADDED (all jobs run with the tools) ===
+pro      14 jobs: passed after 1st round 12, after review fix 12, after retry 13
+         review found problems 5 times (3 on work that already passed; the fix broke passing work 0 times); retries 2; plan+review cost $0.0407 of $1.5869 (3%)
+flash    14 jobs: passed after 1st round 12, after review fix 13, after retry 14
+         review found problems 5 times (3 on work that already passed; the fix broke passing work 0 times); retries 1; plan+review cost $0.0596 of $0.2727 (22%)
+flash41  14 jobs: passed after 1st round 13, after review fix 14, after retry 14
+         review found problems 5 times (4 on work that already passed; the fix broke passing work 0 times); retries 0; plan+review cost $0.0581 of $0.1741 (33%)
+all      42 jobs: passed after 1st round 37, after review fix 39, after retry 41
+         review found problems 15 times (10 on work that already passed; the fix broke passing work 0 times); retries 3; plan+review cost $0.1584 of $2.0337 (8%)
+
+=== 4. THE WHOLE HISTORY, ALL ERAS (every real job ever run) ===
+before BC8 bare   pro                           13/16    81%   $0.0638/job       $0.0785/pass   8.6 min/job
+before BC8 bare   flash                         12/17    71%   $0.0188/job       $0.0266/pass   6.5 min/job
+before BC8 bare   flash41                       11/14    79%   $0.0062/job       $0.0078/pass   1.8 min/job
+BC8        bare   pro                           14/14   100%   $0.0517/job       $0.0517/pass   5.2 min/job
+BC8        bare   flash                         11/14    79%   $0.0084/job       $0.0107/pass   4.0 min/job
+BC8        bare   flash41                       14/14   100%   $0.0036/job       $0.0036/pass   1.3 min/job
+BC8        tools  pro                           13/14    93%   $0.1133/job       $0.1221/pass   6.5 min/job
+BC8        tools  flash                         14/14   100%   $0.0195/job       $0.0195/pass   8.7 min/job
+BC8        tools  flash41                       14/14   100%   $0.0124/job       $0.0124/pass   3.1 min/job
+
+=== 5. CHEAPEST WAY TO A PASS, BY KIND OF WORK (BC8 batch) ===
+For each kind: every model+mode with its pass rate and cost per pass, cheapest first.
+change existing code by house rules: flash41 bare 2/2 $0.0043/pass;  flash41 tools 2/2 $0.0105/pass;  flash bare 1/2 $0.0141/pass;  flash tools 2/2 $0.0146/pass;  pro bare 2/2 $0.0417/pass;  pro tools 2/2 $0.1250/pass
+fix a bug from an error message: flash bare 2/2 $0.0011/pass;  flash41 bare 2/2 $0.0016/pass;  flash tools 2/2 $0.0053/pass;  flash41 tools 2/2 $0.0054/pass;  pro bare 2/2 $0.0089/pass;  pro tools 2/2 $0.0228/pass
+new tool from a description: flash41 bare 2/2 $0.0071/pass;  flash41 tools 2/2 $0.0258/pass;  flash tools 2/2 $0.0415/pass;  flash bare 1/2 $0.0516/pass;  pro bare 2/2 $0.1395/pass;  pro tools 2/2 $0.2643/pass
+new tool needing exactness: flash41 bare 2/2 $0.0066/pass;  flash bare 1/2 $0.0307/pass;  flash41 tools 2/2 $0.0315/pass;  flash tools 2/2 $0.0549/pass;  pro bare 2/2 $0.0925/pass;  pro tools 1/2 $0.5941/pass
+one change across two files: flash41 bare 2/2 $0.0022/pass;  flash41 tools 2/2 $0.0058/pass;  flash bare 2/2 $0.0061/pass;  flash tools 2/2 $0.0085/pass;  pro tools 2/2 $0.0413/pass;  pro bare 2/2 $0.0469/pass
+read code and report without changing anything: flash41 bare 2/2 $0.0025/pass;  flash bare 2/2 $0.0026/pass;  flash41 tools 2/2 $0.0046/pass;  flash tools 2/2 $0.0047/pass;  pro bare 2/2 $0.0113/pass;  pro tools 2/2 $0.0210/pass
+small clear fix: flash41 bare 2/2 $0.0008/pass;  flash bare 2/2 $0.0009/pass;  flash41 tools 2/2 $0.0036/pass;  flash tools 2/2 $0.0068/pass;  pro bare 2/2 $0.0209/pass;  pro tools 2/2 $0.0219/pass
+
+=== 6. FAILURES (BC8 batch) ===
+2026-10-20 17:20  pa-trim [pro, tools]  Submitted  /home/clearcrow/BC_private/autobot/runs/pa-trim--pro--20261020-172031-65242
+2026-10-20 17:59  pa-trim [flash, bare]  Submitted  /home/clearcrow/BC_private/autobot/runs/pa-trim--flash--20261020-175919-121041--bare
+2026-10-20 18:13  bc5d-replay [flash, bare]  LimitsExceeded  /home/clearcrow/BC_private/autobot/runs/bc5d-replay--flash--20261020-181345-121040--bare
+2026-10-20 18:16  nxcode [flash, bare]  LimitsExceeded  /home/clearcrow/BC_private/autobot/runs/nxcode--flash--20261020-181602-121041--bare
+
+=== 7. WHAT WORKERS SAID WOULD HAVE MADE THE JOB EASIER ===
+- rename-route [flash41]: having nginx installed so "nginx -t" could validate the config would have made this easier.
+- rename-route [pro]: a clearer statement about blank lines between existing location blocks would have removed the guesswork.
+- rename-route [flash]: Having a backup copy of the original file would have let me do a direct byte-for-byte diff to prove nothing else changed.
+- bc5d-replay [flash41]: a tiny runnable stub that loads the page's script with a fake URL, so the hide/show
+- bc5d-replay [pro]: a tiny built-in browser test runner (or clear instructions on how to run the page here) so I could watch the change live instead of only checking the code.
+- bc5d-replay [flash]: Having the original version of the file saved so I could diff my change against it would have made checking "nothing else changed" quicker.
+- nxcode [flash41]: a ready-made example file showing every edge case (indented headings,
+- nxcode [pro]: A sample block with fake secrets and a list of expected exact outputs would have made checking the edge cases quicker.
+- bugfix [pro]: having a byte-level expected output file for the sample would have made the check quicker.
+- pa-trim [pro]: A clear one-line example of the exact archive bytes expected after the marker would have made this fix trivial.
+- bugfix [flash41]: A one-line note in the task saying whether an empty "tags:" line should count as untagged would have saved a guess.
+- read-report [flash41]: a short index of the functions in autobot.py would have made finding the answer lines faster.
+- read-report [flash]: a short summary of the file's constants at the top would have saved reading through the functions.
+- two-file [flash]: A sample test file showing exactly how the page and server talk would have made me faster, though the curl tests covered it.
+- nxcode [flash]: A clearer explanation of what counts as "shaped like" a key (whether
+- rename-route [flash]: A simpler nginx config file with fewer rules would have made it quicker to spot the right insertion point.
+- pa-trim [flash]: A clearer explanation of what to do when moving a section would make the file bigger, since the note line can be larger than a very short section.
+- bc5d-replay [flash41]: a saved original copy of botcouncil.html to diff against would have made proving "nothing else changed" quicker.
+- bc5d-replay [pro]: having a real browser or headless DOM in the box would have made it easier to prove the button/page behaviour directly instead of only checking the file.
+- nxcode [flash41]: a sample copy of order-server.py that is only a few lines long would have made testing the block edges much quicker.
+- nxcode [pro]: A tiny example file in the task description with one fake key, one fake secret token, and one fake address would have made it easier to check hiding without guessing the expected boundary rules.
+- bugfix [pro]: a clearer note in the card that the date should come from the From line when the tags line is missing would have made the intended parsing rule faster to spot.
+- bugfix [flash]: having a note in the sample file showing which part was written before tags existed would have made the fix obvious right away.
+- bugfix [flash41]: A sample file that included both an old untagged entry and tagged entries in the
+- read-report [pro]: a grep-ready FAQ section at the top of autobot.py would have made these questions faster.
+- read-report [flash41]: a plain-English index of function names and line numbers for the big file would have made finding these settings faster.
+- pa-trim [flash41]: a ready-made example archive file (one ending with a newline and one not) would have settled the blank-line question at once.
+- pa-trim [pro]: a sample PA and archive pair with expected output would have made testing clearer.
+- two-file [pro]: exact original copies of the files in the task would have made the no-changes check simpler.
+- two-file [flash41]: A ready-made tiny test harness that starts the server, fires a few example requests, and checks only-added-lines would have made verifying this job quicker.
+- pa-trim [flash]: A note in the spec or earlier test output that the archive marker

@@ -1,0 +1,58 @@
+== TITLE ==
+Browser: a three-step job application with screening questions
+
+== SITE ==
+~/BC_private/autobot/tasks/browser-practice-site
+
+== UPLOAD ==
+~/BC_private/autobot/tasks/browser-files/sam-rivera-resume.txt
+
+== KIND ==
+browser: multi-step application with screening questions
+
+== TASK ==
+Go to http://127.0.0.1:8765/ (a practice job site), open the Program Aide job, and apply for Sam Rivera. The application has three steps and asks some screening questions; answer each one from these details.
+
+Sam Rivera's details (the only facts you have):
+- Full name: Sam Rivera
+- Email: sam.rivera@example.org
+- Phone: 503-555-0142
+- Age: 34
+- Can lift up to 40 pounds
+- Doesn't own a car; takes the bus everywhere and has never been late to a shift
+- Customer service: 2 years at a library front desk
+- Wants 19 dollars an hour
+- Can work evenings and weekends, not mornings
+- Can start on 2 November 2026
+- Heard about Riverbend's jobs on a job board
+- Resume file: /work/upload/sam-rivera-resume.txt
+
+Check every answer on the review step, then submit the application once. When it's done, say the reference number the site shows.
+
+== DONE WHEN ==
+The application is submitted once, every screening question is answered correctly from the details, and the reference number is reported.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import glob, json, re
+subs = sorted(glob.glob('/work/out/submit-*.json'))
+print('submissions:', len(subs))
+assert len(subs) == 1, f'expected exactly one submission, found {len(subs)}'
+s = json.load(open(subs[0])); f = s['fields']; print(s)
+norm = lambda x: ' '.join(str(x).split())
+assert norm(f.get('full_name')) == 'Sam Rivera', 'wrong name'
+assert f.get('email', '').strip().lower() == 'sam.rivera@example.org', 'wrong email'
+assert re.sub(r'\D', '', f.get('phone', '')) == '5035550142', 'wrong phone'
+for k, want in [('age18', 'Yes'), ('lift', 'Yes'), ('transport', 'Yes'), ('cs_experience', 'Yes')]:
+    assert f.get(k) == want, f'wrong answer for {k}: {f.get(k)}'
+assert re.sub(r'[^0-9.]', '', f.get('cs_years', '')) in ('2', '2.0'), 'wrong years of customer service'
+assert re.sub(r'[^0-9.]', '', f.get('pay', '')) in ('19', '19.0', '19.00'), 'wrong desired pay'
+r = json.load(open('/work/out/result.json'))
+assert 'PRX-1001' in str(r.get('final_result')), 'the reference number was not reported'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 30
+dollars: 0.30
+minutes: 15

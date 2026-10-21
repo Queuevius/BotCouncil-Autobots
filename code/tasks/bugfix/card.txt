@@ -1,0 +1,61 @@
+== TITLE ==
+Fix a bug from an error message: updates_summary.py crashes on old entries
+
+== KIND ==
+fix a bug from an error message
+
+== FILES ==
+~/BC_private/autobot/tasks/bugfix/files/updates_summary.py -> updates_summary.py
+~/BC_private/autobot/tasks/bugfix/files/UPDATES-sample.md -> UPDATES-sample.md
+
+== TASK ==
+updates_summary.py reads an updates post and prints one line per tag: how many entries carry it and the newest date. Running it on the sample crashes. This is what it printed:
+
+$ python3 updates_summary.py UPDATES-sample.md
+Traceback (most recent call last):
+  File "updates_summary.py", line 36, in <module>
+    print("\n".join(summary(parse(open(sys.argv[1]).read()))))
+  File "updates_summary.py", line 19, in parse
+    tags = [t.strip() for t in lines[0].split(":", 1)[1].split(",") if t.strip()]
+IndexError: list index out of range
+
+Background: entries written before tags existed have no "tags:" line; their first line is the From line, which holds the date. The rest of the Nexus files those entries under the tag "untagged".
+
+Fix updates_summary.py so an entry with no tags line counts under the tag untagged, using the date on its From line, and everything else works as before. Keep the output format exactly as it is. Make the smallest change that fixes it, and don't change UPDATES-sample.md.
+
+== DONE WHEN ==
+python3 updates_summary.py UPDATES-sample.md runs without an error and prints one line per tag in the same format as before, with the old entry counted under untagged with its own date; entries that do have tags are counted as before; UPDATES-sample.md is unchanged.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import subprocess, os
+def run(f):
+    return subprocess.run(['python3', '/work/updates_summary.py', f], capture_output=True, text=True, timeout=60)
+assert open('/work/UPDATES-sample.md').read() == open('/before/UPDATES-sample.md').read(), 'UPDATES-sample.md was changed'
+r = run('/work/UPDATES-sample.md')
+print(r.stdout, r.stderr[-800:])
+assert r.returncode == 0, 'it still crashes on the sample'
+want = ["edition-10: 1 entries, newest 2026-09-29", "edition-13: 1 entries, newest 2026-10-06",
+        "nexus: 2 entries, newest 2026-10-06", "nginx: 1 entries, newest 2026-09-29",
+        "stale-copies: 1 entries, newest 2026-09-29", "tony-post: 1 entries, newest 2026-09-29",
+        "untagged: 1 entries, newest 2026-09-27"]
+assert r.stdout.split('\n')[:-1] == want, 'the sample output is not right'
+os.makedirs('/tmp/t', exist_ok=True)
+open('/tmp/t/other.md', 'w').write(
+    "tags: alpha, beta\nFrom the PU thread, session PU 2. To every thread. 1 October 2026.\nnews\n---\n"
+    "From the PC thread, session PC-3. To thread BC. 3 October 2026.\nolder news, no tags line\n---\n"
+    "From the NP thread, session NP2. To thread BC. 30 September 2026.\nmore old news\n---\n"
+    "tags: beta\nFrom the JOBS thread, session Jobs 4. To every thread. 12 October 2026.\nlast\n")
+r = run('/tmp/t/other.md')
+print(r.stdout, r.stderr[-800:])
+assert r.returncode == 0, 'it crashes on another updates post'
+want = ["alpha: 1 entries, newest 2026-10-01", "beta: 2 entries, newest 2026-10-12",
+        "untagged: 2 entries, newest 2026-10-03"]
+assert r.stdout.split('\n')[:-1] == want, 'another updates post comes out wrong'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 25
+dollars: 0.25
+minutes: 15

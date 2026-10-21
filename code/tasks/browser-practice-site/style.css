@@ -1,0 +1,3 @@
+body{font:16px/1.5 sans-serif;max-width:720px;margin:24px auto;padding:0 16px;color:#222}
+label{display:block;margin-top:12px;font-weight:600}fieldset{margin-top:14px}input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{width:100%;padding:6px;box-sizing:border-box}
+button{margin-top:16px;padding:8px 16px}.step{display:none}.step.on{display:block}

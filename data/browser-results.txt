@@ -1,0 +1,20 @@
+apply-simple   flash              0/2 passed   $0.0120/job   no priced passes   0.2 min/job
+apply-simple   flash    +examples 0/1 passed   $0.0120/job   no priced passes   0.3 min/job
+apply-simple   flash41            3/3 passed   $0.0278/job   $0.0278/pass   0.8 min/job
+apply-simple   pro                0/1 passed   $0.0920/job   no priced passes   1.0 min/job
+apply-simple   pro      +examples 0/1 passed   $0.0614/job   no priced passes   0.4 min/job
+apply-steps    flash              0/2 passed   $0.0121/job   no priced passes   0.4 min/job
+apply-steps    flash    +examples 0/1 passed   $0.0122/job   no priced passes   0.3 min/job
+apply-steps    flash41            3/3 passed   $0.0298/job   $0.0298/pass   0.8 min/job
+apply-steps    pro                0/1 passed   $0.0607/job   no priced passes   0.3 min/job
+apply-steps    pro      +examples 0/1 passed   $0.0605/job   no priced passes   0.3 min/job
+apply-stop     flash              0/2 passed   $0.0121/job   no priced passes   0.4 min/job
+apply-stop     flash    +examples 0/1 passed   $0.0120/job   no priced passes   0.3 min/job
+apply-stop     flash41            3/3 passed   $0.0151/job   $0.0151/pass   0.5 min/job
+apply-stop     pro                0/1 passed   $0.0605/job   no priced passes   0.3 min/job
+apply-stop     pro      +examples 0/1 passed   $0.0619/job   no priced passes   0.6 min/job
+prep-only      flash              0/2 passed   $0.0122/job   no priced passes   0.3 min/job
+prep-only      flash    +examples 0/1 passed   $0.0120/job   no priced passes   0.3 min/job
+prep-only      flash41            3/3 passed   $0.1216/job   $0.1216/pass   4.8 min/job
+prep-only      pro                0/1 passed   $0.0609/job   no priced passes   0.3 min/job
+prep-only      pro      +examples 0/1 passed   $0.0605/job   no priced passes   0.3 min/job

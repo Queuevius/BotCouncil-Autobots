@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>Apply: Program Aide</title><link rel="stylesheet" href="style.css">
+<h1>Apply: Program Aide</h1>
+<form id="f" action="/submit" method="post" enctype="multipart/form-data">
+<div class="step on" id="s1"><h2>Step 1 of 3: Contact</h2>
+<label for="full_name">Full name</label><input type="text" id="full_name" name="full_name" required>
+<label for="email">Email</label><input type="email" id="email" name="email" required>
+<label for="phone">Phone</label><input type="tel" id="phone" name="phone" required>
+<label for="age18">Are you at least 18 years old?</label><select id="age18" name="age18" required><option value="">Choose</option><option>Yes</option><option>No</option></select>
+<button type="button" onclick="go(1,2)">Next</button></div>
+<div class="step" id="s2"><h2>Step 2 of 3: A few questions</h2>
+<label for="lift">Can you lift 25 pounds?</label><select id="lift" name="lift" required><option value="">Choose</option><option>Yes</option><option>No</option></select>
+<label for="transport">Do you have reliable transportation to work?</label><select id="transport" name="transport" required><option value="">Choose</option><option>Yes</option><option>No</option></select>
+<label for="cs_experience">Have you worked in customer service?</label><select id="cs_experience" name="cs_experience" required><option value="">Choose</option><option>Yes</option><option>No</option></select>
+<label for="cs_years">If yes, how many years?</label><input type="text" id="cs_years" name="cs_years">
+<label for="pay">Desired hourly pay (dollars)</label><input type="text" id="pay" name="pay" required>
+<button type="button" onclick="go(2,1)">Back</button> <button type="button" onclick="go(2,3)">Next</button></div>
+<div class="step" id="s3"><h2>Step 3 of 3: Review and submit</h2><p>Please check your answers below.</p><pre id="review"></pre>
+<button type="button" onclick="go(3,2)">Back</button> <button type="submit">Submit application</button></div>
+</form>
+<script>
+function go(a,b){
+  if(b>a){ for(const el of document.querySelectorAll('#s'+a+' [required]')){ if(!el.value){ alert('Please answer: '+document.querySelector('label[for='+el.id+']').textContent); el.focus(); return; } } }
+  document.getElementById('s'+a).classList.remove('on'); document.getElementById('s'+b).classList.add('on');
+  if(b===3){ const d=new FormData(document.getElementById('f')); let t=''; for(const [k,v] of d) t+=k+': '+v+'\n'; document.getElementById('review').textContent=t; }
+}
+</script>

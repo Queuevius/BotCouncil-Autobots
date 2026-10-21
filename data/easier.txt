@@ -1,0 +1,41 @@
+- smoke-hello [flash]: nothing.
+- smoke-hello [flash]: nothing.
+- rename-route [flash41]: having nginx installed so "nginx -t" could validate the config would have made this easier.
+- rename-route [pro]: a clearer statement about blank lines between existing location blocks would have removed the guesswork.
+- rename-route [flash]: Having a backup copy of the original file would have let me do a direct byte-for-byte diff to prove nothing else changed.
+- bc5d-replay [flash41]: a tiny runnable stub that loads the page's script with a fake URL, so the hide/show
+- bc5d-replay [pro]: a tiny built-in browser test runner (or clear instructions on how to run the page here) so I could watch the change live instead of only checking the code.
+- bc5d-replay [flash]: Having the original version of the file saved so I could diff my change against it would have made checking "nothing else changed" quicker.
+- nxcode [flash41]: a ready-made example file showing every edge case (indented headings,
+- nxcode [pro]: A sample block with fake secrets and a list of expected exact outputs would have made checking the edge cases quicker.
+- bugfix [pro]: having a byte-level expected output file for the sample would have made the check quicker.
+- bugfix [flash]: nothing.
+- pa-trim [pro]: A clear one-line example of the exact archive bytes expected after the marker would have made this fix trivial.
+- read-report [pro]: nothing
+- bugfix [flash41]: A one-line note in the task saying whether an empty "tags:" line should count as untagged would have saved a guess.
+- read-report [flash41]: a short index of the functions in autobot.py would have made finding the answer lines faster.
+- read-report [flash]: a short summary of the file's constants at the top would have saved reading through the functions.
+- two-file [flash]: A sample test file showing exactly how the page and server talk would have made me faster, though the curl tests covered it.
+- two-file [flash41]: nothing
+- rename-route [pro]: nothing
+- nxcode [flash]: A clearer explanation of what counts as "shaped like" a key (whether
+- rename-route [flash]: A simpler nginx config file with fewer rules would have made it quicker to spot the right insertion point.
+- rename-route [flash41]: nothing.
+- two-file [pro]: nothing
+- pa-trim [flash]: A clearer explanation of what to do when moving a section would make the file bigger, since the note line can be larger than a very short section.
+- bc5d-replay [flash41]: a saved original copy of botcouncil.html to diff against would have made proving "nothing else changed" quicker.
+- bc5d-replay [pro]: having a real browser or headless DOM in the box would have made it easier to prove the button/page behaviour directly instead of only checking the file.
+- nxcode [flash41]: a sample copy of order-server.py that is only a few lines long would have made testing the block edges much quicker.
+- nxcode [pro]: A tiny example file in the task description with one fake key, one fake secret token, and one fake address would have made it easier to check hiding without guessing the expected boundary rules.
+- bugfix [pro]: a clearer note in the card that the date should come from the From line when the tags line is missing would have made the intended parsing rule faster to spot.
+- bugfix [flash]: having a note in the sample file showing which part was written before tags existed would have made the fix obvious right away.
+- bugfix [flash41]: A sample file that included both an old untagged entry and tagged entries in the
+- read-report [pro]: a grep-ready FAQ section at the top of autobot.py would have made these questions faster.
+- read-report [flash]: nothing.
+- read-report [flash41]: a plain-English index of function names and line numbers for the big file would have made finding these settings faster.
+- pa-trim [flash41]: a ready-made example archive file (one ending with a newline and one not) would have settled the blank-line question at once.
+- pa-trim [pro]: a sample PA and archive pair with expected output would have made testing clearer.
+- two-file [pro]: exact original copies of the files in the task would have made the no-changes check simpler.
+- two-file [flash41]: A ready-made tiny test harness that starts the server, fires a few example requests, and checks only-added-lines would have made verifying this job quicker.
+- two-file [flash]: nothing
+- pa-trim [flash]: A note in the spec or earlier test output that the archive marker

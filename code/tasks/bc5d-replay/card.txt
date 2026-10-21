@@ -1,0 +1,57 @@
+== TITLE ==
+EASY (replay of BC5d): hide the cost line in visitor spaces
+
+== KIND ==
+change existing code by house rules
+
+== FILES ==
+~/Nexus_private/backups-BC5/botcouncil.html.bak-BC5d -> botcouncil.html
+
+== TASK ==
+botcouncil.html is the page for Tony's BotCouncil chat window. Under each AI answer it shows a small grey line with the cost, like "$0.01 · 0% at the repeat discount". Tony's words: "there's grey text saying "$0.01 · 0% at the repeat discount" on the AI's comment. I'd like to hide that stuff."
+
+Hide that line only in visitor spaces. A visitor space is a page opened with an address whose ?space= value starts with try (for example ?space=try or ?space=try-1a2b3c4d). Tony's own window (no ?space=) and every other space must keep showing it.
+
+First find how the page builds that line, then add your change as one new block just before </body>. Don't edit anything else in the file.
+
+== DONE WHEN ==
+One new block sits just before </body>, nothing else in the file changed, and the cost line is hidden only when ?space= starts with try.
+
+== CHECK ==
+python3 - <<'EOF'
+import difflib, re
+b = open('/before/botcouncil.html').read().splitlines(True)
+a = open('/work/botcouncil.html').read().splitlines(True)
+ops = [o for o in difflib.SequenceMatcher(None, b, a, autojunk=False).get_opcodes() if o[0] != 'equal']
+assert ops, 'nothing changed'
+assert all(o[0] == 'insert' for o in ops), 'existing lines were changed or removed'
+assert len(ops) == 1, 'changes are in more than one place'
+tag, i1, i2, j1, j2 = ops[0]
+ins = ''.join(a[j1:j2])
+last_body = max(k for k, l in enumerate(b) if '</body>' in l)
+assert i1 == last_body, 'the new block is not just before </body>'
+assert 'msg-meta' in ins, 'the block does not target the cost line box (msg-meta)'
+assert 'try' in ins, 'the block does not limit itself to visitor spaces'
+print('ALL CHECKS PASSED')
+EOF
+
+== REFERENCE ==
+The block the BC thread added at session BC5d (18 Oct 2026):
+
+<style>
+  body.bc-visitor .msg-meta{display:none}
+</style>
+<script>
+(function () {
+  try {
+    var s = (new URLSearchParams(location.search).get('space') || '').toLowerCase();
+    var sp = (typeof SPACE === 'string') ? SPACE : '';
+    if (/^try/.test(s) || /^try-/.test(sp)) document.body.classList.add('bc-visitor');
+  } catch (e) {}
+})();
+</script>
+
+== LIMITS ==
+steps: 25
+dollars: 0.25
+minutes: 15

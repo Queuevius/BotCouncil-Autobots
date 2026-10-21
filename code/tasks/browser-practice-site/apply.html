@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><title>Apply: Front Desk Associate</title><link rel="stylesheet" href="style.css">
+<h1>Apply: Front Desk Associate</h1>
+<form action="/submit" method="post" enctype="multipart/form-data">
+<label for="full_name">Full name</label><input type="text" id="full_name" name="full_name" required>
+<label for="email">Email</label><input type="email" id="email" name="email" required>
+<label for="phone">Phone</label><input type="tel" id="phone" name="phone" required>
+<label for="position">Position</label>
+<select id="position" name="position" required><option value="">Choose one</option>
+<option>Custodian</option><option>Front Desk Associate</option><option>Program Aide</option></select>
+<fieldset><legend>When can you work? (check all that apply)</legend>
+<label><input type="checkbox" name="availability" value="mornings"> Mornings</label>
+<label><input type="checkbox" name="availability" value="evenings"> Evenings</label>
+<label><input type="checkbox" name="availability" value="weekends"> Weekends</label></fieldset>
+<label for="start_date">Earliest start date</label><input type="date" id="start_date" name="start_date" required>
+<fieldset><legend>How did you hear about this job?</legend>
+<label><input type="radio" name="heard_about" value="Friend"> From a friend</label>
+<label><input type="radio" name="heard_about" value="Job board"> A job board</label>
+<label><input type="radio" name="heard_about" value="Other"> Other</label></fieldset>
+<label for="cover_note">Short note to the hiring team</label><textarea id="cover_note" name="cover_note" rows="5"></textarea>
+<label for="resume">Resume</label><input type="file" id="resume" name="resume" required>
+<button type="submit">Submit application</button>
+</form>

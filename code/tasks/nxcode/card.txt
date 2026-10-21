@@ -1,0 +1,72 @@
+== TITLE ==
+MEDIUM (approved organelle): nxcode, the code finder
+
+== KIND ==
+new tool from a description
+
+== FILES ==
+~/Needpedia_Nexus/order-server.py -> order-server.py
+
+== TASK ==
+Build a small tool, /work/nxcode.py, that prints just one named block of Tony's back-end file, so AIs stop asking Tony to dig through a 5,000+ line file. Use only Python's standard library. Test it on /work/order-server.py (a copy with keys blanked). Don't change order-server.py.
+
+How the file is built: it's made of blocks. A block starts at a heading line: a line whose text, after any leading spaces, starts with "# --- ". Some headings are indented. A line whose text (after leading spaces) starts with "# --- end" is NOT a heading; it closes the block above it.
+
+What nxcode.py must do:
+1. python3 nxcode.py NAME [FILE]
+   FILE defaults to order-server.py in the same folder as nxcode.py. NAME is matched against the heading's words (the text after "# --- "), ignoring upper/lower case (a part of the heading is enough, e.g. "studio rename").
+   Print the matching block: from its heading line down to just before the next heading line, or down to and including its "# --- end" line if one comes first, or down to just before the line starting "if __name__ == '__main__'", whichever comes first. Put each line's line number in front of it, then a tab.
+   If no heading matches: print "no block matches NAME" and exit with code 1. If more than one matches: print each matching heading with its line number and exit with code 2.
+2. python3 nxcode.py --list [FILE]
+   Print every heading (not the "# --- end" lines) with its line number, one per line.
+3. Hide secrets in everything it prints:
+   - a quoted value assigned to a name containing PASS, PASSWORD, KEY, TOKEN or SECRET (any case) becomes [hidden]
+   - anything shaped like sk-or-v1-..., sk-..., ghp_..., github_pat_... becomes [hidden]
+   - internet addresses, both the 203.0.113.7 kind and the 2001:db8::7 kind, become [address hidden]
+4. --copy (optional extra flag): if the xclip program exists, also copy the output to the clipboard; if it doesn't, just print.
+
+Test it on real block names from /work/order-server.py before you finish.
+
+== DONE WHEN ==
+nxcode.py prints the right block with line numbers, lists headings, handles no match and several matches, and never prints keys or internet addresses.
+
+== CHECK ==
+python3 - <<'EOF'
+import subprocess, os
+os.makedirs('/tmp/t', exist_ok=True)
+src = open('/before/order-server.py').read()
+fake = ("# --- fake check block (autobot check) ---\n"
+        "FAKE_KEY = 'sk-or-v1-0123456789abcdef0123456789abcdef'\n"
+        "VISITOR = '203.0.113.77'\n"
+        "V6 = '2001:db8:85a3::8a2e:370:7334'\n"
+        "x_marker = 1\n\n")
+i = src.find("if __name__ == '__main__'")
+assert i > 0, 'CARD PROBLEM: no __main__ line'
+open('/tmp/t/order-server.py', 'w').write(src[:i] + fake + src[i:])
+def run(*a):
+    return subprocess.run(['python3', '/work/nxcode.py', *a, '/tmp/t/order-server.py'], capture_output=True, text=True, timeout=60)
+r = run('fake check block'); o = r.stdout
+print(o[:600], r.stderr[-800:])
+assert r.returncode == 0, 'named block: error exit'
+assert 'fake check block' in o and 'x_marker = 1' in o, 'named block: not printed'
+assert '0123456789abcdef0123456789abcdef' not in o, 'a key was shown'
+assert '203.0.113.77' not in o and '8a2e:370:7334' not in o, 'an internet address was shown'
+assert '__main__' not in o, 'printed past the end of the block'
+r = run('STUDIO RENAME'); o = r.stdout
+assert r.returncode == 0 and 'studio rename (John 12)' in o and 'end studio rename' in o, 'studio rename block wrong'
+assert 'STORAGE_CAP' not in o, 'studio rename block ran past its end line'
+assert o.splitlines()[0].split('\t')[0].strip().isdigit(), 'no line numbers'
+r = run('--list'); o = r.stdout
+assert r.returncode == 0 and len(o.splitlines()) > 10, '--list printed too little'
+assert 'end studio rename' not in o, '--list shows end lines'
+r = run('no such block xyz123')
+assert r.returncode == 1, 'no-match should exit with 1'
+r = run('bc thread')
+assert r.returncode == 2, 'several matches should exit with 2'
+print('ALL CHECKS PASSED')
+EOF
+
+== LIMITS ==
+steps: 40
+dollars: 0.40
+minutes: 25

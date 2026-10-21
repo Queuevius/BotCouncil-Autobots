@@ -1,0 +1,63 @@
+== TITLE ==
+Browser: fill in and submit a one-page job application
+
+== SITE ==
+~/BC_private/autobot/tasks/browser-practice-site
+
+== UPLOAD ==
+~/BC_private/autobot/tasks/browser-files/sam-rivera-resume.txt
+
+== KIND ==
+browser: fill in and submit a form
+
+== TASK ==
+Go to http://127.0.0.1:8765/ (a practice job site), open the Front Desk Associate job, and apply for Sam Rivera.
+
+Sam Rivera's details (the only facts you have):
+- Full name: Sam Rivera
+- Email: sam.rivera@example.org
+- Phone: 503-555-0142
+- Age: 34
+- Can lift up to 40 pounds
+- Doesn't own a car; takes the bus everywhere and has never been late to a shift
+- Customer service: 2 years at a library front desk
+- Wants 19 dollars an hour
+- Can work evenings and weekends, not mornings
+- Can start on 2 November 2026
+- Heard about Riverbend's jobs on a job board
+- Resume file: /work/upload/sam-rivera-resume.txt
+
+For the short note to the hiring team, use exactly this text: I have two years at a library front desk and I'm great with people. I'm free evenings and weekends.
+
+Upload the resume file. Check every answer, then submit the application once. When it's done, say the reference number the site shows.
+
+== DONE WHEN ==
+The application is submitted once with every answer right, the resume attached, and the reference number reported.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import glob, json, re
+subs = sorted(glob.glob('/work/out/submit-*.json'))
+print('submissions:', len(subs))
+assert len(subs) == 1, f'expected exactly one submission, found {len(subs)}'
+s = json.load(open(subs[0])); f = s['fields']; print(s)
+norm = lambda x: ' '.join(str(x).split())
+assert norm(f.get('full_name')) == 'Sam Rivera', 'wrong name'
+assert f.get('email', '').strip().lower() == 'sam.rivera@example.org', 'wrong email'
+assert re.sub(r'\D', '', f.get('phone', '')) == '5035550142', 'wrong phone'
+assert f.get('position') == 'Front Desk Associate', 'wrong position'
+av = f.get('availability', []); av = [av] if isinstance(av, str) else av
+assert sorted(av) == ['evenings', 'weekends'], f'wrong availability: {av}'
+assert f.get('start_date') == '2026-11-02', f"wrong start date: {f.get('start_date')}"
+assert f.get('heard_about') == 'Job board', 'wrong answer to how they heard'
+assert norm(f.get('cover_note')) == "I have two years at a library front desk and I'm great with people. I'm free evenings and weekends.", 'the note is not the exact text'
+assert s['files'].get('resume') == 'sam-rivera-resume.txt', 'the resume was not uploaded'
+r = json.load(open('/work/out/result.json'))
+assert 'PRX-1001' in str(r.get('final_result')), 'the reference number was not reported'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 30
+dollars: 0.30
+minutes: 15

@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tiny tools</title>
+<textarea id="text" rows="4" cols="50"></textarea>
+<p>
+  <button id="echo-btn">Echo</button>
+</p>
+<p id="echo-out"></p>
+<script>
+async function call(path, data) {
+  const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+  return r.json();
+}
+document.getElementById('echo-btn').onclick = async () => {
+  const d = await call('/api/echo', {text: document.getElementById('text').value});
+  document.getElementById('echo-out').textContent = d.text;
+};
+</script>

@@ -1,0 +1,26 @@
+HOUSE RULES FOR THE AUTOBOT (Tony Brasher's systems, BotCouncil). Read before every task.
+Started 19 Oct 2026, BC thread, session BC6.
+
+WHERE YOU ARE
+- You work on copies of files in /work, inside a box with no internet. Nothing you do reaches the live site.
+- Keys and passwords in these copies were replaced with the word BLANKED. Leave them that way; never try to fill them in.
+- Each command times out after 90 seconds. Python 3.12 and bash are installed; nothing else is promised.
+
+HOW TO WORK
+- Read only the parts of a file you need (grep -n, sed -n 'START,ENDp'). Some files are thousands of lines long.
+- Make the smallest change that does the job, in the file's existing style. Don't reformat or rewrite code you weren't asked to touch.
+- After changing a Python file, run: python3 -m py_compile FILE
+- If the same error happens twice, stop trying. Write in your notes what blocked you, then finish.
+- Never weaken or skip a check to make something pass.
+
+TONY'S NEXUS CODE (order-server.py, botcouncil.html, nginx-default.conf)
+- order-server.py is the Nexus back end: one big Python file built from blocks. New code goes in a new block after the last block, just above the lines that start with: if __name__ == '__main__'
+- Each block starts with a comment line beginning "# --- " that names it and says which thread and session added it.
+- Later definitions replace earlier ones, so a block changes behaviour by redefining or wrapping an earlier function, not by editing old blocks.
+- New back-end actions that come through /admin-ops must have names starting with bc- (any other name gets "not wired up").
+- botcouncil.html changes go in a new block just before </body>.
+- Any script that calls nexus.needpedia.org uses curl, not Python's own web requests.
+
+WHEN YOU FINISH
+- Write AUTOBOT-NOTES.txt in /work: a few plain sentences on what you changed, how you checked it, and anything you're unsure of. Use everyday words; the reader isn't a programmer.
+- When a spec says moved text must be "exactly as they were," verify your output against the original with a byte-level check before declaring success, not just by reasoning about your code. (learned 20 Oct 2026 from pa-trim, approved by Tony)

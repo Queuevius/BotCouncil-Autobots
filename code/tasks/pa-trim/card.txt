@@ -1,0 +1,72 @@
+== TITLE ==
+HARD (real loose end): pa_trim, keep prompt accomplices small enough for AIs to read
+
+== KIND ==
+new tool needing exactness
+
+== FILES ==
+~/Needpedia_Nexus/PA-BC.txt -> PA-BC.txt
+
+== TASK ==
+Tony's threads each keep a "prompt accomplice": a public notes file that grows every session. Claude's web reader stops partway through big ones (PA-JOHN is already past that point), so build /work/pa_trim.py: a tool that moves the oldest middle sections of a prompt accomplice into the thread's archive file when it gets too big, without losing or changing a single character. Use only Python's standard library. /work/PA-BC.txt is a real one to test on (work on copies of it in /tmp, not the file itself).
+
+How a prompt accomplice is built: a section starts at a line beginning with "== " (at the very start of the line). Anything before the first such line is the top and always stays.
+
+python3 pa_trim.py PA_FILE ARCHIVE_FILE --max-bytes N [--keep-first K] [--date YYYY-MM-DD]
+(--keep-first defaults to 1; --date defaults to today.)
+
+1. If PA_FILE is already N bytes or smaller (counting UTF-8 bytes), change nothing, print "nothing to move", exit 0.
+2. Otherwise: always keep the top, the first K sections and the newest (last) section. Move the oldest sections right after the first K, one at a time in order, until the file (including the note line in step 4) is N bytes or smaller, or nothing more can move. Move no more than needed.
+3. Add to the end of ARCHIVE_FILE (make it if missing): a newline, then exactly this line, then a newline, then the moved sections exactly as they were:
+   ----- archived DATE | from PA | file PA_FILE_NAME | tags: pa-trim -----
+   where PA_FILE_NAME is just the file's name, e.g. PA-BC.txt.
+4. In PA_FILE, where the moved sections were, put exactly this one line (with its newline):
+   (Older sections moved to ARCHIVE_FILE_NAME on DATE.)
+   where ARCHIVE_FILE_NAME is just the archive's file name, e.g. ARCHIVE-BC.md.
+5. Write PA_FILE in place (open it and write to it; don't delete and recreate it).
+6. Print one short line: how many sections moved, how many bytes, and the new size.
+Running it again right away must change nothing (the file is now small enough).
+
+== DONE WHEN ==
+pa_trim.py brings PA-BC.txt under the size given, keeps the first and newest sections, moves only as much as needed, archives the moved text exactly with the marker line, leaves the note line, and a second run changes nothing.
+
+== CHECK ==
+python3 - <<'EOF'
+import subprocess, re, os
+orig = open('/before/PA-BC.txt').read()
+split = lambda t: re.split(r'(?m)^(?=== )', t)
+secs = split(orig); top, s = secs[0], secs[1:]
+assert len(s) > 5 and len(orig.encode()) > 30000, 'CARD PROBLEM: test file too small'
+os.makedirs('/tmp/t', exist_ok=True)
+pa, ar = '/tmp/t/PA-BC.txt', '/tmp/t/ARCHIVE-BC.md'
+open(pa, 'w').write(orig)
+start = '# ARCHIVE - BC THREAD\nan older entry\n'
+open(ar, 'w').write(start)
+cmd = ['python3', '/work/pa_trim.py', pa, ar, '--max-bytes', '25000', '--keep-first', '1', '--date', '2026-10-19']
+r = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+print(r.stdout[-600:], r.stderr[-1500:])
+assert r.returncode == 0, 'pa_trim.py exited with an error'
+new, arc = open(pa).read(), open(ar).read()
+assert len(new.encode()) <= 25000, f'PA still {len(new.encode())} bytes'
+marker = '----- archived 2026-10-19 | from PA | file PA-BC.txt | tags: pa-trim -----'
+pre = start + '\n' + marker + '\n'
+assert arc.startswith(pre), 'archive does not start with the old text, a blank line, then the marker line'
+moved = arc[len(pre):]
+assert moved.startswith('== '), 'moved text does not start at a section'
+note = '(Older sections moved to ARCHIVE-BC.md on 2026-10-19.)\n'
+head = top + s[0]
+assert new.startswith(head + note), 'the note line is not right after the first section'
+rest = new[len(head + note):]
+assert orig == head + moved + rest, 'some text was lost, changed or reordered'
+assert rest.endswith(s[-1]), 'the newest section was not kept'
+last_moved = split(moved)[-1]
+assert len((head + note + last_moved + rest).encode()) > 25000, 'moved more than needed'
+r2 = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+assert r2.returncode == 0 and open(pa).read() == new and open(ar).read() == arc, 'a second run changed things'
+print('ALL CHECKS PASSED')
+EOF
+
+== LIMITS ==
+steps: 50
+dollars: 0.60
+minutes: 30

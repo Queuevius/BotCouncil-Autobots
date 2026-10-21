@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+"""readweb URL [N] - prints a web page as plain text, the first N characters (default 8000).
+Part of the autobot's box (BC thread, session BC8)."""
+import sys
+
+import html2text
+import requests
+
+if len(sys.argv) < 2:
+    print("use: readweb URL [how many characters, default 8000]")
+    sys.exit(2)
+url = sys.argv[1]
+n = int(sys.argv[2]) if len(sys.argv) > 2 else 8000
+try:
+    r = requests.get(url, timeout=30, headers={"User-Agent": "autobot (needpedia.org)"})
+except Exception as e:
+    print(f"could not open {url}: {e}")
+    sys.exit(1)
+text = r.text
+if "html" in r.headers.get("content-type", ""):
+    h = html2text.HTML2Text()
+    h.body_width = 0
+    h.ignore_images = True
+    text = h.handle(text)
+more = f"; showing the first {n}, add a bigger number for more" if len(text) > n else ""
+print(f"[{r.status_code}] {url} ({len(text)} characters{more})")
+print(text[:n])
+sys.exit(0 if r.ok else 1)

@@ -1,0 +1,54 @@
+== TITLE ==
+Read code and report, change nothing: questions about the autobot's own program
+
+== KIND ==
+read code and report without changing anything
+
+== FILES ==
+~/BC_private/autobot/autobot.py.bak-BC8 -> autobot.py
+
+== TASK ==
+/work/autobot.py is an older copy of the program that runs you. Read it and answer these questions. Don't change autobot.py or add any file except the two named here.
+
+Write the answers in /work/ANSWERS.txt, one line per question, each line starting with the question's number, a colon and a space, then only the answer (no explanation on that line), like:
+1: example answer
+
+1. When the autobot runs a card's check, which Docker network setting does that check's box use? (the value given after --network)
+2. If a card's LIMITS section doesn't give a dollar limit, what dollar limit does a job get? (a number)
+3. Which model key drafts the lessons from failures? (one of the keys in MODELS)
+4. How many models are listed in MODELS? (a number)
+5. When a batch stops for money or a bad key, what is the name of the file where the reason is kept? (just the file name)
+6. Which HTTP status codes count as a money or key problem no matter what the answer's text says? (the numbers, separated by commas)
+
+Put your reasoning in the notes file, not in ANSWERS.txt.
+
+== DONE WHEN ==
+/work/ANSWERS.txt has six lines, 1 to 6, each with only the answer, every answer right; autobot.py is unchanged and no other file was added.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import os, re
+assert open('/work/autobot.py').read() == open('/before/autobot.py').read(), 'autobot.py was changed'
+extra = sorted(set(os.listdir('/work')) - {'autobot.py', 'ANSWERS.txt', 'AUTOBOT-NOTES.txt', '__pycache__'})
+assert not extra, f'files added that the task did not ask for: {extra}'
+assert os.path.exists('/work/ANSWERS.txt'), 'no ANSWERS.txt'
+ans = {}
+for line in open('/work/ANSWERS.txt').read().splitlines():
+    m = re.match(r'^\s*(\d+)\s*[:.)]\s*(.*?)\s*$', line)
+    if m:
+        ans[int(m.group(1))] = m.group(2).strip().strip('`"\'').strip()
+print(ans)
+assert sorted(ans) == [1, 2, 3, 4, 5, 6], 'ANSWERS.txt does not have exactly the lines 1 to 6'
+assert ans[1].lower() == 'none', 'answer 1 is wrong'
+assert re.fullmatch(r'\$?0?\.50?', ans[2]), 'answer 2 is wrong'
+assert ans[3].lower() == 'pro', 'answer 3 is wrong'
+assert ans[4] in ('3', 'three'), 'answer 4 is wrong'
+assert ans[5] == 'STOPPED.txt', 'answer 5 is wrong'
+assert sorted(int(x) for x in re.findall(r'\d+', ans[6])) == [401, 402, 403], 'answer 6 is wrong'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 20
+dollars: 0.20
+minutes: 12

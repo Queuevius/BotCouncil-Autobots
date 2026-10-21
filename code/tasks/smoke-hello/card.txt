@@ -1,0 +1,22 @@
+== TITLE ==
+Smoke test: make a tiny Python file
+
+== KIND ==
+toy test
+
+== FILES ==
+
+== TASK ==
+Create /work/hello.py. When run with python3 it should print exactly this line and nothing else:
+autobot works
+
+== DONE WHEN ==
+python3 hello.py prints "autobot works".
+
+== CHECK ==
+test "$(python3 /work/hello.py)" = "autobot works"
+
+== LIMITS ==
+steps: 10
+dollars: 0.10
+minutes: 5

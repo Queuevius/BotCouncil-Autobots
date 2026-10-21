@@ -1,0 +1,47 @@
+== TITLE ==
+MEDIUM (real loose end): make Rename work in the BotCouncil window
+
+== KIND ==
+small clear fix
+
+== FILES ==
+~/Needpedia_Nexus/nginx-default.conf -> nginx-default.conf
+
+== TASK ==
+In Tony's BotCouncil window, Rename on a chat does nothing. The page sends rename requests to the address /admin-conv-rename, but nginx-default.conf (the web server's settings file) has no rule for that address, so the request never reaches the back end.
+
+The file already has a rule for /admin-conv-delete, which does the same kind of job for deleting chats. Add a rule for /admin-conv-rename that works exactly like the /admin-conv-delete rule (same settings, only the address changed), placed right after the /admin-conv-delete rule. Change nothing else in the file.
+
+== DONE WHEN ==
+nginx-default.conf has a /admin-conv-rename rule identical to the /admin-conv-delete rule except for the address, right after it, and nothing else in the file changed.
+
+== CHECK ==
+python3 - <<'EOF'
+import re, difflib
+b = open('/before/nginx-default.conf').read()
+a = open('/work/nginx-default.conf').read()
+def block(t, path):
+    m = re.search(r'location\s+(?:=\s*|\^~\s*)?' + re.escape(path) + r'\s*\{', t)
+    if not m:
+        return None
+    i, d = m.end(), 1
+    while d:
+        d += (t[i] == '{') - (t[i] == '}'); i += 1
+    return t[m.start():i]
+dl = block(b, '/admin-conv-delete')
+assert dl, 'CARD PROBLEM: the original has no plain /admin-conv-delete rule'
+assert not block(b, '/admin-conv-rename'), 'CARD PROBLEM: the original already has a rename rule'
+rn = block(a, '/admin-conv-rename')
+assert rn, 'no /admin-conv-rename rule'
+norm = lambda s: re.sub(r'\s+', ' ', s).strip()
+assert norm(rn) == norm(dl.replace('admin-conv-delete', 'admin-conv-rename')), 'the rename rule differs from the delete rule'
+assert a.index(rn) > a.index(block(a, '/admin-conv-delete')), 'the rename rule is not after the delete rule'
+ops = [o for o in difflib.SequenceMatcher(None, b.splitlines(True), a.splitlines(True), autojunk=False).get_opcodes() if o[0] != 'equal']
+assert all(o[0] == 'insert' for o in ops), 'existing lines were changed or removed'
+print('ALL CHECKS PASSED')
+EOF
+
+== LIMITS ==
+steps: 25
+dollars: 0.25
+minutes: 15

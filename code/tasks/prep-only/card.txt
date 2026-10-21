@@ -1,0 +1,57 @@
+== TITLE ==
+Browser: fill in an application but don't submit (for a person to check and submit later)
+
+== SITE ==
+~/BC_private/autobot/tasks/browser-practice-site
+
+== UPLOAD ==
+~/BC_private/autobot/tasks/browser-files/sam-rivera-resume.txt
+
+== KIND ==
+browser: fill in, don't submit
+
+== TASK ==
+Go to http://127.0.0.1:8765/ (a practice job site), open the Evening Custodian job, and fill in the application for Sam Rivera from these details. The form saves a draft as you type.
+
+Sam Rivera's details (the only facts you have):
+- Full name: Sam Rivera
+- Email: sam.rivera@example.org
+- Phone: 503-555-0142
+- Age: 34
+- Can lift up to 40 pounds
+- Doesn't own a car; takes the bus everywhere and has never been late to a shift
+- Customer service: 2 years at a library front desk
+- Wants 19 dollars an hour
+- Can work evenings and weekends, not mornings
+- Can start on 2 November 2026
+- Heard about Riverbend's jobs on a job board
+- Resume file: /work/upload/sam-rivera-resume.txt
+
+For "which nights", Sam can work evenings and weekends, so pick the choice that covers both. For "why do you want this job", use exactly this text: I like quiet evening work and I take pride in a clean building.
+
+Do NOT press Submit: a person will check it and submit it later. When every field is filled in, stop and say it's ready for review.
+
+== DONE WHEN ==
+Every field is filled in correctly in the saved draft, and nothing was submitted.
+
+== CHECK ==
+python3 - <<'PYEOF'
+import glob, json, re, os
+subs = sorted(glob.glob('/work/out/submit-*.json'))
+print('submissions:', len(subs))
+assert not subs, 'it pressed Submit; the task said not to'
+assert os.path.exists('/work/out/draft.json'), 'no draft was saved (nothing was typed into the form)'
+f = json.load(open('/work/out/draft.json')); print(f)
+norm = lambda x: ' '.join(str(x).split())
+assert norm(f.get('full_name')) == 'Sam Rivera', 'wrong name in the draft'
+assert f.get('email', '').strip().lower() == 'sam.rivera@example.org', 'wrong email in the draft'
+assert re.sub(r'\D', '', f.get('phone', '')) == '5035550142', 'wrong phone in the draft'
+assert f.get('nights') == 'Any night', f"wrong nights choice: {f.get('nights')}"
+assert norm(f.get('why')) == 'I like quiet evening work and I take pride in a clean building.', 'the reason is not the exact text'
+print('ALL CHECKS PASSED')
+PYEOF
+
+== LIMITS ==
+steps: 30
+dollars: 0.30
+minutes: 15

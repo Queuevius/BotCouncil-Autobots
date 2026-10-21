@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><title>Apply: Evening Custodian</title><link rel="stylesheet" href="style.css">
+<h1>Apply: Evening Custodian</h1>
+<p>Your answers are saved as a draft as you type. Press Submit only when you're ready.</p>
+<form id="f" action="/submit" method="post" enctype="multipart/form-data">
+<label for="full_name">Full name</label><input type="text" id="full_name" name="full_name" required>
+<label for="email">Email</label><input type="email" id="email" name="email" required>
+<label for="phone">Phone</label><input type="tel" id="phone" name="phone" required>
+<label for="nights">Which nights can you work?</label>
+<select id="nights" name="nights" required><option value="">Choose one</option><option>Weeknights only</option><option>Weekends only</option><option>Any night</option></select>
+<label for="why">Why do you want this job? (a sentence or two)</label><textarea id="why" name="why" rows="4"></textarea>
+<button type="submit">Submit application</button>
+</form>
+<script>
+const f=document.getElementById('f');
+function save(){ const d={}; for(const [k,v] of new FormData(f)) if(typeof v==='string') d[k]=v;
+  fetch('/draft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}); }
+f.addEventListener('input',save); f.addEventListener('change',save);
+</script>
